@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,15 @@ public class CourseController {
 	
 	@Autowired
 	private ICourseService service;
+	
+	@Autowired
+	private Environment env;
+	
+	@GetMapping("/port")
+	public String status()
+	{
+		return "The mcsv: "+env.getProperty("spring.application.name")+", actual port number is: "+env.getProperty("server.port");
+	}
 	
 	@GetMapping
 	public ResponseEntity<?> listar(){

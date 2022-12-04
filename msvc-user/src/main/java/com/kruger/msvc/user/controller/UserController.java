@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.env.Environment;
 
 import com.kruger.msvc.user.entity.User;
 import com.kruger.msvc.user.service.IUserService;
@@ -29,6 +30,15 @@ public class UserController {
 	
 	@Autowired
 	private IUserService service;
+	
+	@Autowired
+	private Environment env;
+	
+	@GetMapping("/port")
+	public String status()
+	{
+		return "The mcsv: "+env.getProperty("spring.application.name")+", actual port number is: "+env.getProperty("server.port");
+	}
 	
 	@GetMapping
 	public ResponseEntity<?> findAll(){
