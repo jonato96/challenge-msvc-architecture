@@ -20,18 +20,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kruger.msvc.course.client.UserClient;
 import com.kruger.msvc.course.entity.Course;
 import com.kruger.msvc.course.service.ICourseService;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @RestController
 @RequestMapping("/api/course")
 public class CourseController {
 	
 	@Autowired
+	private UserClient userClient;
+	
+	@Autowired
 	private ICourseService service;
 	
 	@Autowired
 	private Environment env;
+	
+	@GetMapping("/avalible")
+	@CircuitBreaker(name="CircuitBreakerService", fallbackMethod="avalibleUserFallback")
+	public String avalibleUser() {
+		return userClient.avaliblePort();
+	}
+	
+	public String avalibleUserFallback(Exception ex) {
+		return "Ups, service down, come back later";
+	}
 	
 	@GetMapping("/port")
 	public String status()
